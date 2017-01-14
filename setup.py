@@ -11,8 +11,7 @@ setup(
     url='https://github.com/andersonjonathan',
     install_requires=[
         'Django==1.8.4',
-        'PyMySQL',
-        'mysql-python',
+        'mysqlclient',
         'dj-static==0.0.6'
     ],
     dependency_links=[
