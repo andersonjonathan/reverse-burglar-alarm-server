@@ -10,7 +10,9 @@ setup(
     author_email='jonathan@jonathananderson.se',
     url='https://github.com/andersonjonathan',
     install_requires=[
-        'Django==1.8.4'
+        'Django==1.8.4',
+        'PyMySQL',
+        'dj-static==0.0.6'
     ],
     dependency_links=[
         'https://pypi.python.org/simple/django/'
