@@ -5,6 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-{{ content }}
+<table>
+    <tr><th>Datum/Tid</th><th>Sensor</th></tr>
+    {% for a in content %}
+        <tr><td>{{ a.date }}</td><td>{{ a.message }}</td></tr>
+    {% endfor %}
+</table>
+
 </body>
 </html>

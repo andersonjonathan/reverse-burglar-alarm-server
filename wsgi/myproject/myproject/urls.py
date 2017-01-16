@@ -18,5 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/login/$', view=admin.site.login),
     url(r'^', include('alarm.urls')),
 ]
