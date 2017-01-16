@@ -6,10 +6,12 @@ from django.views.decorators.csrf import csrf_exempt
 import os
 from .models import Message
 
+
 @login_required
 def landing(request):
 
-    return render(request, 'alarm/landing.html', {"content": Message.objects.all()})
+    return render(request, 'alarm/landing.html', {"content": Message.objects.filter(type="movement").order_by("-time")[0:10],
+                                                  "ping": Message.objects.filter(type="ping").order_by("-time").first()})
 
 
 @csrf_exempt
