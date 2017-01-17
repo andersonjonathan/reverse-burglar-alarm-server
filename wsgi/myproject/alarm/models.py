@@ -16,6 +16,6 @@ class Message(models.Model):
     @property
     def dt(self):
         try:
-            return datetime.datetime.strptime(self.time, "%Y-%m-%dT%H:%M:%S.%f")
+            return datetime.datetime.strptime(self.time, "%Y-%m-%dT%H:%M:%S.%f") + datetime.timedelta(hours=1)
         except:
             return self.time
