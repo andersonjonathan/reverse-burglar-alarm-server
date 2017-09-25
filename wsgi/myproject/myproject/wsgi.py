@@ -14,7 +14,5 @@ from dj_static import Cling
 
 # GETTING-STARTED: change 'myproject' to your project name:
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "myproject.settings")
-if not 'OPENSHIFT_REPO_DIR' in os.environ:
-    application = Cling(get_wsgi_application())
-else:
-    application = get_wsgi_application()
+
+application = Cling(get_wsgi_application())
