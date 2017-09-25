@@ -10,6 +10,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
+import secrets
 
 from django.contrib import messages
 
@@ -18,28 +20,17 @@ BASE_DIR = os.path.dirname(DJ_PROJECT_DIR)
 WSGI_DIR = os.path.dirname(BASE_DIR)
 REPO_DIR = os.path.dirname(WSGI_DIR)
 DATA_DIR = os.path.join(REPO_DIR, 'data')
-ON_OPENSHIFT = 'OPENSHIFT_REPO_DIR' in os.environ
 
-if ON_OPENSHIFT:
-    DATA_DIR = os.environ.get('OPENSHIFT_DATA_DIR', BASE_DIR)
-
-import sys
 sys.path.append(os.path.join(REPO_DIR, 'libs'))
-import secrets
 SECRETS = secrets.getter(os.path.join(DATA_DIR, 'secrets.json'))
 SECRET_KEY = SECRETS['secret_key']
-
-DEBUG = os.environ.get('DEBUG') == 'True'
+DEBUG = str(os.environ.get('DEBUG')) == str('True')
 
 ADMINS = [('Jonathan Anderson', 'jonathan@jonathananderson.se')]
 MANAGERS = ADMINS
 
-from socket import gethostname
 ALLOWED_HOSTS = [
-    gethostname(),  # For internal OpenShift load balancer security purposes.
-    os.environ.get('OPENSHIFT_APP_DNS'),  # Dynamically map to the OpenShift gear name.
-    #'example.com', # First DNS alias (set up in the app)
-    #'www.example.com', # Second DNS alias (set up in the app)
+    "*"
 ]
 
 
@@ -93,22 +84,14 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        # GETTING-STARTED: change 'db.sqlite3' to your sqlite3 database:
-        'NAME': os.path.join(DATA_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ['APP_NAME'],
+        'USER': os.environ['MYSQL_DB_USERNAME'],
+        'PASSWORD': os.environ['MYSQL_DB_PASSWORD'],
+        'HOST': os.environ['MYSQL_DB_HOST'],
+        'PORT': os.environ['MYSQL_DB_PORT']
     }
 }
-if ON_OPENSHIFT:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ['OPENSHIFT_APP_NAME'],
-            'USER': os.environ['OPENSHIFT_MYSQL_DB_USERNAME'],
-            'PASSWORD': os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'],
-            'HOST': os.environ['OPENSHIFT_MYSQL_DB_HOST'],
-            'PORT': os.environ['OPENSHIFT_MYSQL_DB_PORT']
-        }
-    }
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -131,24 +114,6 @@ STATIC_ROOT = os.path.join(WSGI_DIR, 'static')
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # This is a dummy backend which prints emails as a normal print() statement (i.e. to stdout)
-# EMAIL_HOST_USER = 'noreply@navitas.se'
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# SERVER_EMAIL = EMAIL_HOST_USER
-#
-# if ON_OPENSHIFT:
-#     send_email = False
-#     try:
-#         s = str(os.environ.get('SEND_EMAIL'))
-#         if s == str('TRUE'):
-#             send_email = True
-#     except:
-#         pass
-#     if send_email:
-#         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-#         EMAIL_USE_TLS = True
-#         EMAIL_HOST = 'smtp.gmail.com'
-#         EMAIL_PORT = 587
-#         EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
 SITE_ID = 1
 
