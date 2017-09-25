@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
-import secrets
 
 from django.contrib import messages
 
@@ -20,8 +19,9 @@ BASE_DIR = os.path.dirname(DJ_PROJECT_DIR)
 WSGI_DIR = os.path.dirname(BASE_DIR)
 REPO_DIR = os.path.dirname(WSGI_DIR)
 DATA_DIR = os.path.join(REPO_DIR, 'data')
-
 sys.path.append(os.path.join(REPO_DIR, 'libs'))
+
+import secrets
 SECRETS = secrets.getter(os.path.join(DATA_DIR, 'secrets.json'))
 SECRET_KEY = SECRETS['secret_key']
 DEBUG = str(os.environ.get('DEBUG')) == str('True')
